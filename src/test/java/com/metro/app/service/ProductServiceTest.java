@@ -1,10 +1,10 @@
 package com.metro.app.service;
 
-import com.metro.app.error.ResourceNotFoundException;
-import com.metro.app.jpa.model.Product;
-import com.metro.app.jpa.repository.ProductRepository;
+import com.metro.app.exception.ResourceNotFoundException;
+import com.metro.app.repository.Product;
+import com.metro.app.repository.ProductRepository;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.product.ProductResource;
+import com.metro.app.service.model.request.product.ProductRequest;
 import com.metro.app.service.model.view.product.ProductView;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,11 +36,11 @@ public class ProductServiceTest {
     public void creatProduct() {
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
+        final ProductRequest productRequest = new ProductRequest(name, price);
         final Product expected = new Product(name, price);
         expected.setId(214L);
         when(productRepository.save(new Product(name, price))).thenReturn(expected);
-        final ProductView actual = productService.creatProduct(productResource);
+        final ProductView actual = productService.creatProduct(productRequest);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
@@ -50,13 +50,13 @@ public class ProductServiceTest {
     public void updateProduct() {
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
+        final ProductRequest productRequest = new ProductRequest(name, price);
         final Product expected = new Product(name, price);
         final long id = 214L;
         expected.setId(id);
         when(productRepository.findById(id)).thenReturn(Optional.of(expected));
         when(productRepository.save(expected)).thenReturn(expected);
-        final ProductView actual = productService.updateProduct(id, productResource);
+        final ProductView actual = productService.updateProduct(id, productRequest);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
@@ -65,12 +65,13 @@ public class ProductServiceTest {
     public void updateProductNotFound() {
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
+        final ProductRequest productRequest = new ProductRequest(name, price);
         final Product expected = new Product(name, price);
         final long id = 214L;
         expected.setId(id);
         when(productRepository.findById(id)).thenReturn(Optional.empty());
-        final ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, ()->{ productService.updateProduct(id, productResource);});
+        final ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, ()->{ productService.updateProduct(id,
+                                                                                                                                     productRequest);});
         assertEquals("Product not found with id=" + id, exception.getMessage());
     }
 

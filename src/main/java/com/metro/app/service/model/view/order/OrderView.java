@@ -1,13 +1,13 @@
 package com.metro.app.service.model.view.order;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.metro.app.service.model.resource.order.OrderResource;
+import com.metro.app.service.model.request.order.OrderRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 import java.util.List;
 
-public class OrderView<T> extends OrderResource<T> {
+public class OrderView<T> extends OrderRequest<T> {
     @Schema(name = "id",
             type = "number",
             format = "integer",

@@ -1,12 +1,12 @@
-package com.metro.app.endpoint;
+package com.metro.app.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.metro.app.error.RestExceptionHandler;
+import com.metro.app.exception.RestExceptionHandler;
 import com.metro.app.service.OrderService;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.order.OrderItemResource;
-import com.metro.app.service.model.resource.order.OrderResource;
+import com.metro.app.service.model.request.order.OrderItemRequest;
+import com.metro.app.service.model.request.order.OrderRequest;
 import com.metro.app.service.model.view.order.OrderItemView;
 import com.metro.app.service.model.view.order.OrderView;
 import org.junit.Before;
@@ -90,12 +90,12 @@ public class OrderControllerTest {
 
     @Test
     public void testPlaceOrder() throws Exception {
-        final OrderResource<OrderItemResource> orderResource = createOrderResource();
+        final OrderRequest<OrderItemRequest> orderRequest = createOrderResource();
         final OrderView<OrderItemView> expected = createOrderView();
         when(orderService.placeOrder(any())).thenReturn(expected);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(OrderController.ORDER)
                                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                                       .content(objectMapper.writeValueAsBytes(orderResource))
+                                                                       .content(objectMapper.writeValueAsBytes(orderRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
         final OrderView<OrderItemView> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
@@ -111,14 +111,14 @@ public class OrderControllerTest {
         assertEquals(expected.getOrderItemsResource().get(0).getQuantity(), actual.getOrderItemsResource().get(0).getQuantity());
     }
 
-    private OrderResource<OrderItemResource> createOrderResource() {
+    private OrderRequest<OrderItemRequest> createOrderResource() {
         final String email = "test@test.com";
-        final List<OrderItemResource> orderItemsResource = new ArrayList<>();
+        final List<OrderItemRequest> orderItemsResource = new ArrayList<>();
         final Long productId = 2L;
         final Double quantity = 2.0;
-        orderItemsResource.add(new OrderItemResource(productId, quantity));
-        final OrderResource<OrderItemResource> orderResource = new OrderResource(email, orderItemsResource);
-        return orderResource;
+        orderItemsResource.add(new OrderItemRequest(productId, quantity));
+        final OrderRequest<OrderItemRequest> orderRequest = new OrderRequest(email, orderItemsResource);
+        return orderRequest;
     }
 
     private OrderView<OrderItemView> createOrderView() {

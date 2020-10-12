@@ -1,16 +1,10 @@
-package com.metro.app.jpa.model;
+package com.metro.app.repository;
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity

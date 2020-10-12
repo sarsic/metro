@@ -1,4 +1,4 @@
-package com.metro.app.service.model.resource.product;
+package com.metro.app.service.model.request.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
-public class ProductResource {
+public class ProductRequest {
     @Schema(name = "name",
             type = "string",
             description = "Product name",
@@ -23,11 +23,11 @@ public class ProductResource {
     @DecimalMin(value = "0.0", message = "Price min 0.0")
     private Double price;
 
-    protected ProductResource() {
+    protected ProductRequest() {
 
     }
 
-    public ProductResource(final String name, final Double price) {
+    public ProductRequest(final String name, final Double price) {
         this.name = name;
         this.price = price;
     }
@@ -48,7 +48,7 @@ public class ProductResource {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductResource that = (ProductResource) o;
+        final ProductRequest that = (ProductRequest) o;
         return Objects.equals(name, that.name) && Objects.equals(price, that.price);
     }
 

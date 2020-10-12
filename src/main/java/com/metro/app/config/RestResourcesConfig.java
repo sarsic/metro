@@ -1,6 +1,6 @@
 package com.metro.app.config;
 
-import com.metro.app.error.RestExceptionHandler;
+import com.metro.app.exception.RestExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,9 +1,9 @@
 package com.metro.app.service.model.view.order;
 
-import com.metro.app.service.model.resource.order.OrderItemResource;
+import com.metro.app.service.model.request.order.OrderItemRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class OrderItemView extends OrderItemResource {
+public class OrderItemView extends OrderItemRequest {
     @Schema(name = "price",
             type = "number",
             format = "double",

@@ -1,14 +1,14 @@
 package com.metro.app.service;
 
-import com.metro.app.error.ResourceNotFoundException;
-import com.metro.app.jpa.model.Order;
-import com.metro.app.jpa.model.OrderItem;
-import com.metro.app.jpa.model.Product;
-import com.metro.app.jpa.repository.OrderRepository;
-import com.metro.app.jpa.repository.ProductRepository;
+import com.metro.app.exception.ResourceNotFoundException;
+import com.metro.app.repository.Order;
+import com.metro.app.repository.OrderItem;
+import com.metro.app.repository.Product;
+import com.metro.app.repository.OrderRepository;
+import com.metro.app.repository.ProductRepository;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.order.OrderItemResource;
-import com.metro.app.service.model.resource.order.OrderResource;
+import com.metro.app.service.model.request.order.OrderItemRequest;
+import com.metro.app.service.model.request.order.OrderRequest;
 import com.metro.app.service.model.view.order.OrderItemView;
 import com.metro.app.service.model.view.order.OrderView;
 import org.junit.Before;
@@ -95,12 +95,12 @@ public class OrderServiceTest {
         order.setId(214L);
         order.addOrderItem(orderItem);
         final Optional<Product> productOptional = Optional.of(product);
-        final List<OrderItemResource> orderItemsResource = new ArrayList<>();
-        orderItemsResource.add(new OrderItemResource(product.getId(), order.getOrderItems().get(0).getQuantity()));
-        final OrderResource<OrderItemResource> orderResource = new OrderResource<>(order.getEmail(), orderItemsResource);
+        final List<OrderItemRequest> orderItemsResource = new ArrayList<>();
+        orderItemsResource.add(new OrderItemRequest(product.getId(), order.getOrderItems().get(0).getQuantity()));
+        final OrderRequest<OrderItemRequest> orderRequest = new OrderRequest<>(order.getEmail(), orderItemsResource);
         when(productRepository.findById(product.getId())).thenReturn(productOptional);
         when(orderRepository.save(any())).thenReturn(order);
-        final OrderView<OrderItemView> actual = orderService.placeOrder(orderResource);
+        final OrderView<OrderItemView> actual = orderService.placeOrder(orderRequest);
         assertEquals(order.getId(), actual.getId());
         assertEquals(order.getDtc(), actual.getDtc());
         assertEquals(order.getOrderItems().size(), actual.getOrderItemsResource().size());
@@ -118,12 +118,12 @@ public class OrderServiceTest {
         final Order order = getOrder();
         order.setId(214L);
         order.addOrderItem(orderItem);
-        final List<OrderItemResource> orderItemsResource = new ArrayList<>();
-        orderItemsResource.add(new OrderItemResource(product.getId(), order.getOrderItems().get(0).getQuantity()));
-        final OrderResource<OrderItemResource> orderResource = new OrderResource<>(order.getEmail(), orderItemsResource);
+        final List<OrderItemRequest> orderItemsResource = new ArrayList<>();
+        orderItemsResource.add(new OrderItemRequest(product.getId(), order.getOrderItems().get(0).getQuantity()));
+        final OrderRequest<OrderItemRequest> orderRequest = new OrderRequest<>(order.getEmail(), orderItemsResource);
         when(productRepository.findById(product.getId())).thenReturn(Optional.empty());
         final ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            orderService.placeOrder(orderResource);
+            orderService.placeOrder(orderRequest);
         });
         assertEquals("Product not found with id=" + product.getId(), exception.getMessage());
     }

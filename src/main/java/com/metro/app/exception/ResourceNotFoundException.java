@@ -1,4 +1,4 @@
-package com.metro.app.error;
+package com.metro.app.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

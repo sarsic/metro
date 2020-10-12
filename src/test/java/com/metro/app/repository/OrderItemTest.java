@@ -1,8 +1,8 @@
-package com.metro.app.jpa.model;
+package com.metro.app.repository;
 
+import com.metro.app.repository.OrderItem;
+import com.metro.app.repository.Product;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

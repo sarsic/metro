@@ -1,8 +1,8 @@
-package com.metro.app.endpoint;
+package com.metro.app.controller;
 
 import com.metro.app.service.ProductService;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.product.ProductResource;
+import com.metro.app.service.model.request.product.ProductRequest;
 import com.metro.app.service.model.view.product.ProductView;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +29,14 @@ public class ProductController {
     }
 
     @PostMapping(value = PRODUCT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductView> createProduct(@Valid @RequestBody final ProductResource productResource) {
-        return ResponseEntity.ok(productService.creatProduct(productResource));
+    public ResponseEntity<ProductView> createProduct(@Valid @RequestBody final ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.creatProduct(productRequest));
     }
 
     @PutMapping(value = PRODUCT_FOR_ID, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductView> updateProduct(@PathVariable("id") final Long id,
-                                                         @Valid @RequestBody final ProductResource productResource) {
-        return ResponseEntity.ok(productService.updateProduct(id, productResource));
+                                                         @Valid @RequestBody final ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.updateProduct(id, productRequest));
     }
 
     @GetMapping(value = PRODUCT, produces = MediaType.APPLICATION_JSON_VALUE)

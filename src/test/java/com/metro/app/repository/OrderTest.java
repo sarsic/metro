@@ -1,5 +1,6 @@
-package com.metro.app.jpa.model;
+package com.metro.app.repository;
 
+import com.metro.app.repository.Order;
 import org.junit.Test;
 
 import java.util.Date;

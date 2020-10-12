@@ -1,4 +1,4 @@
-package com.metro.app.service.model.resource.order;
+package com.metro.app.service.model.request.order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class OrderResource<T> {
+public class OrderRequest<T> {
     @Schema(name = "email",
             type = "string",
             description = "Buyer email",
@@ -17,11 +17,11 @@ public class OrderResource<T> {
     @Size(min = 1)
     private List<T> orderItemsResource;
 
-    protected OrderResource() {
+    protected OrderRequest() {
 
     }
 
-    public OrderResource(final String email, final List<T> orderItemsResource) {
+    public OrderRequest(final String email, final List<T> orderItemsResource) {
         this.email = email;
         this.orderItemsResource = orderItemsResource;
     }

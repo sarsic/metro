@@ -1,14 +1,14 @@
 package com.metro.app.service;
 
-import com.metro.app.error.ResourceNotFoundException;
-import com.metro.app.jpa.model.Order;
-import com.metro.app.jpa.model.OrderItem;
-import com.metro.app.jpa.model.Product;
-import com.metro.app.jpa.repository.OrderRepository;
-import com.metro.app.jpa.repository.ProductRepository;
+import com.metro.app.exception.ResourceNotFoundException;
+import com.metro.app.repository.Order;
+import com.metro.app.repository.OrderItem;
+import com.metro.app.repository.Product;
+import com.metro.app.repository.OrderRepository;
+import com.metro.app.repository.ProductRepository;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.order.OrderItemResource;
-import com.metro.app.service.model.resource.order.OrderResource;
+import com.metro.app.service.model.request.order.OrderItemRequest;
+import com.metro.app.service.model.request.order.OrderRequest;
 import com.metro.app.service.model.view.order.OrderItemView;
 import com.metro.app.service.model.view.order.OrderView;
 import org.springframework.data.domain.Page;
@@ -37,14 +37,14 @@ public class OrderService {
         return new PageResult<>(pageObject.getTotalPages(), orderResources);
     }
 
-    public OrderView<OrderItemView> placeOrder(final OrderResource<OrderItemResource> orderResource) {
-        final Order order = new Order(orderResource.getEmail(), new Date());
-        for(final OrderItemResource orderItemResource : orderResource.getOrderItemsResource()) {
-            final Optional<Product> product = productRepository.findById(orderItemResource.getProductId());
+    public OrderView<OrderItemView> placeOrder(final OrderRequest<OrderItemRequest> orderRequest) {
+        final Order order = new Order(orderRequest.getEmail(), new Date());
+        for(final OrderItemRequest orderItemRequest : orderRequest.getOrderItemsResource()) {
+            final Optional<Product> product = productRepository.findById(orderItemRequest.getProductId());
             if(product.isPresent()) {
-                order.addOrderItem(new OrderItem(product.get(), orderItemResource.getQuantity()));
+                order.addOrderItem(new OrderItem(product.get(), orderItemRequest.getQuantity()));
             } else {
-                throw new ResourceNotFoundException("Product not found with id=" + orderItemResource.getProductId());
+                throw new ResourceNotFoundException("Product not found with id=" + orderItemRequest.getProductId());
             }
         }
         return createOrderResource(orderRepository.save(order));

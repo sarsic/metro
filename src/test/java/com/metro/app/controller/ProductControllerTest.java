@@ -1,10 +1,10 @@
-package com.metro.app.endpoint;
+package com.metro.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.metro.app.error.ResourceNotFoundException;
-import com.metro.app.error.RestExceptionHandler;
+import com.metro.app.exception.ResourceNotFoundException;
+import com.metro.app.exception.RestExceptionHandler;
 import com.metro.app.service.ProductService;
-import com.metro.app.service.model.resource.product.ProductResource;
+import com.metro.app.service.model.request.product.ProductRequest;
 import com.metro.app.service.model.view.product.ProductView;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,11 +40,11 @@ public class ProductControllerTest {
         final Long id = 1L;
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
-        when(productService.updateProduct(id, productResource)).thenThrow(ResourceNotFoundException.class);
+        final ProductRequest productRequest = new ProductRequest(name, price);
+        when(productService.updateProduct(id, productRequest)).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCT_FOR_ID, id)
                                               .contentType(MediaType.APPLICATION_JSON)
-                                              .content(objectMapper.writeValueAsBytes(productResource))
+                                              .content(objectMapper.writeValueAsBytes(productRequest))
                                               .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
     }
 
@@ -53,12 +53,12 @@ public class ProductControllerTest {
         final Long id = 1L;
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
+        final ProductRequest productRequest = new ProductRequest(name, price);
         final ProductView expected = new ProductView(id, name, price);
-        when(productService.updateProduct(id, productResource)).thenReturn(expected);
+        when(productService.updateProduct(id, productRequest)).thenReturn(expected);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCT_FOR_ID, id)
                                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                                       .content(objectMapper.writeValueAsBytes(productResource))
+                                                                       .content(objectMapper.writeValueAsBytes(productRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
         final ProductView actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), ProductView.class);
@@ -71,13 +71,13 @@ public class ProductControllerTest {
     public void testCreateProduct() throws Exception {
         final String name = "product";
         final Double price = 201.1;
-        final ProductResource productResource = new ProductResource(name, price);
+        final ProductRequest productRequest = new ProductRequest(name, price);
         final Long id = 1L;
         final ProductView expected = new ProductView(id, name, price);
-        when(productService.creatProduct(productResource)).thenReturn(expected);
+        when(productService.creatProduct(productRequest)).thenReturn(expected);
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ProductController.PRODUCT)
                                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                                       .content(objectMapper.writeValueAsBytes(productResource))
+                                                                       .content(objectMapper.writeValueAsBytes(productRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
         final ProductView actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), ProductView.class);

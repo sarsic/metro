@@ -1,9 +1,9 @@
-package com.metro.app.endpoint;
+package com.metro.app.controller;
 
 import com.metro.app.service.OrderService;
 import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.resource.order.OrderItemResource;
-import com.metro.app.service.model.resource.order.OrderResource;
+import com.metro.app.service.model.request.order.OrderItemRequest;
+import com.metro.app.service.model.request.order.OrderRequest;
 import com.metro.app.service.model.view.order.OrderItemView;
 import com.metro.app.service.model.view.order.OrderView;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,8 +35,8 @@ public class OrderController {
     }
 
     @PostMapping(value = ORDER, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderView<OrderItemView>> placeOrder(@Valid @RequestBody final OrderResource<OrderItemResource> orderResource) {
-        return ResponseEntity.ok(orderService.placeOrder(orderResource));
+    public ResponseEntity<OrderView<OrderItemView>> placeOrder(@Valid @RequestBody final OrderRequest<OrderItemRequest> orderRequest) {
+        return ResponseEntity.ok(orderService.placeOrder(orderRequest));
     }
 
     @GetMapping(value = ORDER, produces = MediaType.APPLICATION_JSON_VALUE)
