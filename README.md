@@ -14,7 +14,8 @@ http://localhost:8080/swagger-ui.html
 **You can reach Open Api definition at**
 http://localhost:8080/api-docs/
 
-Once app is started db schema will be created(schema.sql) and 2 products will be initially saved to db(data.sql)
+Once app is started db schema will be created(schema.sql) and 2 products will be initially saved to db(data.sql).
+I didnt put code comment because I was time boxed for this task.
 
 Example of calls:
 

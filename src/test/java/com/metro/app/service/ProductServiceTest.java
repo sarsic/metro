@@ -4,6 +4,7 @@ import com.metro.app.exception.ResourceNotFoundException;
 import com.metro.app.repository.entity.Product;
 import com.metro.app.repository.ProductRepository;
 import com.metro.app.service.request.product.ProductRequest;
+import com.metro.app.service.response.PageResult;
 import com.metro.app.service.response.product.ProductResponse;
 import org.junit.Before;
 import org.junit.Test;

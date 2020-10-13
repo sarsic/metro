@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metro.app.exception.RestExceptionHandler;
 import com.metro.app.service.OrderService;
-import com.metro.app.service.PageResult;
+import com.metro.app.service.response.PageResult;
 import com.metro.app.service.request.order.OrderItemRequest;
 import com.metro.app.service.request.order.OrderRequest;
 import com.metro.app.service.response.order.OrderItemResponse;
@@ -97,7 +97,7 @@ public class OrderControllerTest {
                                                                        .contentType(MediaType.APPLICATION_JSON)
                                                                        .content(objectMapper.writeValueAsBytes(orderRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
-                status().isOk()).andReturn();
+                status().isCreated()).andReturn();
         final OrderResponse<OrderItemResponse> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
                                                                                new TypeReference<OrderResponse<OrderItemResponse>>() {});
         assertEquals(expected.getEmail(), actual.getEmail());

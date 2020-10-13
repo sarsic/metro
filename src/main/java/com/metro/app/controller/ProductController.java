@@ -1,13 +1,12 @@
 package com.metro.app.controller;
 
-import com.metro.app.service.PageResult;
+import com.metro.app.service.response.PageResult;
 import com.metro.app.service.ProductService;
 import com.metro.app.service.request.product.ProductRequest;
 import com.metro.app.service.response.product.ProductResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -26,7 +26,7 @@ import javax.validation.constraints.PositiveOrZero;
 @RequestMapping(ProductController.PRODUCTS_ENDPOINT)
 @RestController
 public class ProductController {
-    public static final String PRODUCTS_ENDPOINT = "products";
+    public static final String PRODUCTS_ENDPOINT = "/products";
     public static final String PRODUCTS_ID = "{id}";
     private final ProductService productService;
 
@@ -50,7 +50,7 @@ public class ProductController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public PageResult<ProductResponse> getProducts(@PositiveOrZero @RequestParam("page") final int page,
-                                                                   @Positive @RequestParam("size") final int size) {
+                                                                   @Positive @RequestParam("size")  @Max(100) final int size) {
         return productService.getProducts(page, size);
     }
 }

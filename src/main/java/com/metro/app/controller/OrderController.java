@@ -1,7 +1,7 @@
 package com.metro.app.controller;
 
 import com.metro.app.service.OrderService;
-import com.metro.app.service.PageResult;
+import com.metro.app.service.response.PageResult;
 import com.metro.app.service.request.order.OrderItemRequest;
 import com.metro.app.service.request.order.OrderRequest;
 import com.metro.app.service.response.order.OrderItemResponse;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Date;
@@ -28,7 +29,7 @@ import java.util.Date;
 @RequestMapping(OrderController.ORDERS_ENDPOINT)
 @RestController
 public class OrderController {
-    public static final String ORDERS_ENDPOINT = "orders";
+    public static final String ORDERS_ENDPOINT = "/orders";
     public static final String FROM_DATE = "from";
     public static final String TO_DATE = "to";
     public static final String PAGE = "page";
@@ -52,7 +53,7 @@ public class OrderController {
             @RequestParam(value = FROM_DATE) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final Date from,
             @Schema(name = TO_DATE, type = "string", format = "date", required = true, example = "1970-01-01")
             @RequestParam(value = TO_DATE) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final Date to,
-            @PositiveOrZero @RequestParam(PAGE) final int page, @Positive @RequestParam(SIZE) final int size) {
+            @PositiveOrZero @RequestParam(PAGE) final int page, @Positive @RequestParam(SIZE) @Max(100) final int size) {
         return orderService.getOrders(from, to, page, size);
     }
 }

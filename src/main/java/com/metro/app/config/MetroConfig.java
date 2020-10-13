@@ -20,8 +20,8 @@ public class MetroConfig {
     public OpenAPI springMetroOpenAPI() {
         return new OpenAPI().info(new Info().title("Metro API")
                                             .description(
-                                                    "Application for Products manipulation, placing orders and listing orders")
-                                            .version("v0.0.1"));
+                                                    "Application for Products manipulation, placing Orders and listing Orders")
+                                            .version("v1.0.0"));
     }
 
     @Bean

@@ -80,7 +80,7 @@ public class ProductControllerTest {
                                                                        .contentType(MediaType.APPLICATION_JSON)
                                                                        .content(objectMapper.writeValueAsBytes(productRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
-                status().isOk()).andReturn();
+                status().isCreated()).andReturn();
         final ProductResponse actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
                                                               ProductResponse.class);
         assertEquals(expected.getId(), actual.getId());
