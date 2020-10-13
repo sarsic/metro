@@ -1,16 +1,15 @@
 package com.metro.app.service;
 
 import com.metro.app.exception.ResourceNotFoundException;
-import com.metro.app.repository.Order;
-import com.metro.app.repository.OrderItem;
-import com.metro.app.repository.Product;
+import com.metro.app.repository.entity.Order;
+import com.metro.app.repository.entity.OrderItem;
+import com.metro.app.repository.entity.Product;
 import com.metro.app.repository.OrderRepository;
 import com.metro.app.repository.ProductRepository;
-import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.request.order.OrderItemRequest;
-import com.metro.app.service.model.request.order.OrderRequest;
-import com.metro.app.service.model.view.order.OrderItemView;
-import com.metro.app.service.model.view.order.OrderView;
+import com.metro.app.service.request.order.OrderItemRequest;
+import com.metro.app.service.request.order.OrderRequest;
+import com.metro.app.service.response.order.OrderItemResponse;
+import com.metro.app.service.response.order.OrderResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,7 +55,7 @@ public class OrderServiceTest {
         final List<Order> orders = Collections.singletonList(order);
         final Page<Order> orderPage = new PageImpl<>(orders, PageRequest.of(page, size), orders.size());
         when(orderRepository.findWithinPeriod(from, to, PageRequest.of(page, size))).thenReturn(orderPage);
-        final PageResult<OrderView<OrderItemView>> actual = orderService.getOrders(from, to, page, size);
+        final PageResult<OrderResponse<OrderItemResponse>> actual = orderService.getOrders(from, to, page, size);
         assertEquals(1, actual.getTotalPages());
         assertEquals(1, actual.getItems().size());
         assertEquals(order.getDtc(), actual.getItems().get(0).getDtc());
@@ -100,7 +99,7 @@ public class OrderServiceTest {
         final OrderRequest<OrderItemRequest> orderRequest = new OrderRequest<>(order.getEmail(), orderItemsResource);
         when(productRepository.findById(product.getId())).thenReturn(productOptional);
         when(orderRepository.save(any())).thenReturn(order);
-        final OrderView<OrderItemView> actual = orderService.placeOrder(orderRequest);
+        final OrderResponse<OrderItemResponse> actual = orderService.placeOrder(orderRequest);
         assertEquals(order.getId(), actual.getId());
         assertEquals(order.getDtc(), actual.getDtc());
         assertEquals(order.getOrderItems().size(), actual.getOrderItemsResource().size());

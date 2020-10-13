@@ -1,9 +1,9 @@
-package com.metro.app.service.model.view.product;
+package com.metro.app.service.response.product;
 
-import com.metro.app.service.model.request.product.ProductRequest;
+import com.metro.app.service.request.product.ProductRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class ProductView extends ProductRequest {
+public class ProductResponse extends ProductRequest {
     @Schema(name = "id",
             type = "number",
             format = "integer",
@@ -11,11 +11,11 @@ public class ProductView extends ProductRequest {
             example = "666")
     private Long id;
 
-    protected ProductView() {
+    protected ProductResponse() {
 
     }
 
-    public ProductView(final Long id, final String name, final Double price) {
+    public ProductResponse(final Long id, final String name, final Double price) {
         super(name, price);
         this.id = id;
     }

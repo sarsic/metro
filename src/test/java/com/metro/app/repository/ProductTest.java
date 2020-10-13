@@ -1,6 +1,6 @@
 package com.metro.app.repository;
 
-import com.metro.app.repository.Product;
+import com.metro.app.repository.entity.Product;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

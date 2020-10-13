@@ -1,4 +1,4 @@
-package com.metro.app.service.model.request.product;
+package com.metro.app.service.request.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

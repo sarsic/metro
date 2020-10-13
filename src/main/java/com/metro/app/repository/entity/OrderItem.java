@@ -1,4 +1,4 @@
-package com.metro.app.repository;
+package com.metro.app.repository.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

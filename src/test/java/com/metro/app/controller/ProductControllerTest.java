@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metro.app.exception.ResourceNotFoundException;
 import com.metro.app.exception.RestExceptionHandler;
 import com.metro.app.service.ProductService;
-import com.metro.app.service.model.request.product.ProductRequest;
-import com.metro.app.service.model.view.product.ProductView;
+import com.metro.app.service.request.product.ProductRequest;
+import com.metro.app.service.response.product.ProductResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,7 +42,7 @@ public class ProductControllerTest {
         final Double price = 201.1;
         final ProductRequest productRequest = new ProductRequest(name, price);
         when(productService.updateProduct(id, productRequest)).thenThrow(ResourceNotFoundException.class);
-        mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCT_FOR_ID, id)
+        mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCTS_ENDPOINT + "/" + ProductController.PRODUCTS_ID, id)
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(objectMapper.writeValueAsBytes(productRequest))
                                               .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isNotFound());
@@ -54,14 +54,15 @@ public class ProductControllerTest {
         final String name = "product";
         final Double price = 201.1;
         final ProductRequest productRequest = new ProductRequest(name, price);
-        final ProductView expected = new ProductView(id, name, price);
+        final ProductResponse expected = new ProductResponse(id, name, price);
         when(productService.updateProduct(id, productRequest)).thenReturn(expected);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCT_FOR_ID, id)
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(ProductController.PRODUCTS_ENDPOINT + "/" + ProductController.PRODUCTS_ID, id)
                                                                        .contentType(MediaType.APPLICATION_JSON)
                                                                        .content(objectMapper.writeValueAsBytes(productRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
-        final ProductView actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), ProductView.class);
+        final ProductResponse actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                                                              ProductResponse.class);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
@@ -73,14 +74,15 @@ public class ProductControllerTest {
         final Double price = 201.1;
         final ProductRequest productRequest = new ProductRequest(name, price);
         final Long id = 1L;
-        final ProductView expected = new ProductView(id, name, price);
+        final ProductResponse expected = new ProductResponse(id, name, price);
         when(productService.creatProduct(productRequest)).thenReturn(expected);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ProductController.PRODUCT)
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ProductController.PRODUCTS_ENDPOINT)
                                                                        .contentType(MediaType.APPLICATION_JSON)
                                                                        .content(objectMapper.writeValueAsBytes(productRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
-        final ProductView actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), ProductView.class);
+        final ProductResponse actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                                                              ProductResponse.class);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());

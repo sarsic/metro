@@ -1,16 +1,15 @@
 package com.metro.app.service;
 
 import com.metro.app.exception.ResourceNotFoundException;
-import com.metro.app.repository.Order;
-import com.metro.app.repository.OrderItem;
-import com.metro.app.repository.Product;
+import com.metro.app.repository.entity.Order;
+import com.metro.app.repository.entity.OrderItem;
+import com.metro.app.repository.entity.Product;
 import com.metro.app.repository.OrderRepository;
 import com.metro.app.repository.ProductRepository;
-import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.request.order.OrderItemRequest;
-import com.metro.app.service.model.request.order.OrderRequest;
-import com.metro.app.service.model.view.order.OrderItemView;
-import com.metro.app.service.model.view.order.OrderView;
+import com.metro.app.service.request.order.OrderItemRequest;
+import com.metro.app.service.request.order.OrderRequest;
+import com.metro.app.service.response.order.OrderItemResponse;
+import com.metro.app.service.response.order.OrderResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -28,16 +27,16 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    public PageResult<OrderView<OrderItemView>> getOrders(final Date from, final Date to, final int page, final int size) {
+    public PageResult<OrderResponse<OrderItemResponse>> getOrders(final Date from, final Date to, final int page, final int size) {
         final Page<Order> pageObject = orderRepository.findWithinPeriod(from, to, PageRequest.of(page, size));
-        final List<OrderView<OrderItemView>> orderResources = new ArrayList<>(pageObject.getSize());
+        final List<OrderResponse<OrderItemResponse>> orderResources = new ArrayList<>(pageObject.getSize());
         for(final Order order : pageObject.getContent()) {
             orderResources.add(createOrderResource(order));
         }
         return new PageResult<>(pageObject.getTotalPages(), orderResources);
     }
 
-    public OrderView<OrderItemView> placeOrder(final OrderRequest<OrderItemRequest> orderRequest) {
+    public OrderResponse<OrderItemResponse> placeOrder(final OrderRequest<OrderItemRequest> orderRequest) {
         final Order order = new Order(orderRequest.getEmail(), new Date());
         for(final OrderItemRequest orderItemRequest : orderRequest.getOrderItemsResource()) {
             final Optional<Product> product = productRepository.findById(orderItemRequest.getProductId());
@@ -50,17 +49,17 @@ public class OrderService {
         return createOrderResource(orderRepository.save(order));
     }
 
-    private OrderView<OrderItemView> createOrderResource(final Order order) {
+    private OrderResponse<OrderItemResponse> createOrderResource(final Order order) {
         double totalCost = 0.0;
-        final List<OrderItemView> orderItemViews = new ArrayList<>();
+        final List<OrderItemResponse> orderItemResponses = new ArrayList<>();
         for(final OrderItem orderItem : order.getOrderItems()) {
-            final OrderItemView orderItemView = new OrderItemView(orderItem.getProduct().getId(), orderItem.getPrice(),
-                                                                  orderItem.getQuantity());
-            totalCost += orderItemView.getPrice() * orderItemView.getQuantity();
-            orderItemViews.add(orderItemView);
+            final OrderItemResponse orderItemResponse = new OrderItemResponse(orderItem.getProduct().getId(), orderItem.getPrice(),
+                                                                              orderItem.getQuantity());
+            totalCost += orderItemResponse.getPrice() * orderItemResponse.getQuantity();
+            orderItemResponses.add(orderItemResponse);
         }
-        final OrderView<OrderItemView> orderView = new OrderView(order.getId(), totalCost, order.getEmail(), order.getDtc(),
-                                                                 orderItemViews);
-        return orderView;
+        final OrderResponse<OrderItemResponse> orderResponse = new OrderResponse(order.getId(), totalCost, order.getEmail(), order.getDtc(),
+                                                                                 orderItemResponses);
+        return orderResponse;
     }
 }

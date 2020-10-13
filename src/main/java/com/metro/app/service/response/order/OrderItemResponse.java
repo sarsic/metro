@@ -1,9 +1,9 @@
-package com.metro.app.service.model.view.order;
+package com.metro.app.service.response.order;
 
-import com.metro.app.service.model.request.order.OrderItemRequest;
+import com.metro.app.service.request.order.OrderItemRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class OrderItemView extends OrderItemRequest {
+public class OrderItemResponse extends OrderItemRequest {
     @Schema(name = "price",
             type = "number",
             format = "double",
@@ -11,11 +11,11 @@ public class OrderItemView extends OrderItemRequest {
             example = "127.0")
     private Double price;
 
-    protected OrderItemView() {
+    protected OrderItemResponse() {
 
     }
 
-    public OrderItemView(final Long productId, final Double price, final Double quantity) {
+    public OrderItemResponse(final Long productId, final Double price, final Double quantity) {
         super(productId, quantity);
         this.price = price;
     }

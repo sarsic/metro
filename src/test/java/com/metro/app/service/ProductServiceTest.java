@@ -1,11 +1,10 @@
 package com.metro.app.service;
 
 import com.metro.app.exception.ResourceNotFoundException;
-import com.metro.app.repository.Product;
+import com.metro.app.repository.entity.Product;
 import com.metro.app.repository.ProductRepository;
-import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.request.product.ProductRequest;
-import com.metro.app.service.model.view.product.ProductView;
+import com.metro.app.service.request.product.ProductRequest;
+import com.metro.app.service.response.product.ProductResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -40,7 +39,7 @@ public class ProductServiceTest {
         final Product expected = new Product(name, price);
         expected.setId(214L);
         when(productRepository.save(new Product(name, price))).thenReturn(expected);
-        final ProductView actual = productService.creatProduct(productRequest);
+        final ProductResponse actual = productService.creatProduct(productRequest);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
@@ -56,7 +55,7 @@ public class ProductServiceTest {
         expected.setId(id);
         when(productRepository.findById(id)).thenReturn(Optional.of(expected));
         when(productRepository.save(expected)).thenReturn(expected);
-        final ProductView actual = productService.updateProduct(id, productRequest);
+        final ProductResponse actual = productService.updateProduct(id, productRequest);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
@@ -87,7 +86,7 @@ public class ProductServiceTest {
         final List<Product> products = Collections.singletonList(expected);
         final Page<Product> productPage = new PageImpl<>(products, PageRequest.of(page, size), products.size());
         when(productRepository.findAll(PageRequest.of(page, size))).thenReturn(productPage);
-        final PageResult<ProductView> actual = productService.getProducts(page, size);
+        final PageResult<ProductResponse> actual = productService.getProducts(page, size);
         assertEquals(productPage.getTotalPages(), actual.getTotalPages());
         assertEquals(productPage.getContent().size(), actual.getItems().size());
         assertEquals(productPage.getContent().get(0).getId(), actual.getItems().get(0).getId());

@@ -1,4 +1,4 @@
-package com.metro.app.service.model.request.product;
+package com.metro.app.service.request.product;
 
 import org.junit.Test;
 

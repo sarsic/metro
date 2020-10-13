@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metro.app.exception.RestExceptionHandler;
 import com.metro.app.service.OrderService;
-import com.metro.app.service.model.PageResult;
-import com.metro.app.service.model.request.order.OrderItemRequest;
-import com.metro.app.service.model.request.order.OrderRequest;
-import com.metro.app.service.model.view.order.OrderItemView;
-import com.metro.app.service.model.view.order.OrderView;
+import com.metro.app.service.PageResult;
+import com.metro.app.service.request.order.OrderItemRequest;
+import com.metro.app.service.request.order.OrderRequest;
+import com.metro.app.service.response.order.OrderItemResponse;
+import com.metro.app.service.response.order.OrderResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -51,18 +51,18 @@ public class OrderControllerTest {
         final int size = 10;
         final int page = 0;
         final String dateTo = "2019-01-01";
-        final OrderView<OrderItemView> orderResource = createOrderView();
-        final PageResult<OrderView<OrderItemView>> expected = new PageResult<>(1L, Collections.singletonList(orderResource));
+        final OrderResponse<OrderItemResponse> orderResource = createOrderView();
+        final PageResult<OrderResponse<OrderItemResponse>> expected = new PageResult<>(1L, Collections.singletonList(orderResource));
         when(orderService.getOrders(any(), any(), anyInt(), anyInt())).thenReturn(expected);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(OrderController.ORDER)
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(OrderController.ORDERS_ENDPOINT)
                                                                        .param(OrderController.FROM_DATE, dateFrom)
                                                                        .param(OrderController.TO_DATE, dateTo)
                                                                        .param(OrderController.PAGE, String.valueOf(page))
                                                                        .param(OrderController.SIZE, String.valueOf(size)))
                                         .andExpect(status().isOk())
                                         .andReturn();
-        final PageResult<OrderView<OrderItemView>> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
-                                                                                   new TypeReference<PageResult<OrderView<OrderItemView>>>() {});
+        final PageResult<OrderResponse<OrderItemResponse>> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                                                                                           new TypeReference<PageResult<OrderResponse<OrderItemResponse>>>() {});
         assertEquals(expected.getTotalPages(), actual.getTotalPages());
         assertEquals(expected.getItems().size(), actual.getItems().size());
         assertEquals(expected.getItems().get(0).getId(), actual.getItems().get(0).getId());
@@ -91,15 +91,15 @@ public class OrderControllerTest {
     @Test
     public void testPlaceOrder() throws Exception {
         final OrderRequest<OrderItemRequest> orderRequest = createOrderResource();
-        final OrderView<OrderItemView> expected = createOrderView();
+        final OrderResponse<OrderItemResponse> expected = createOrderView();
         when(orderService.placeOrder(any())).thenReturn(expected);
-        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(OrderController.ORDER)
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(OrderController.ORDERS_ENDPOINT)
                                                                        .contentType(MediaType.APPLICATION_JSON)
                                                                        .content(objectMapper.writeValueAsBytes(orderRequest))
                                                                        .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(
                 status().isOk()).andReturn();
-        final OrderView<OrderItemView> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
-                                                                       new TypeReference<OrderView<OrderItemView>>() {});
+        final OrderResponse<OrderItemResponse> actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                                                                               new TypeReference<OrderResponse<OrderItemResponse>>() {});
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getDtc(), actual.getDtc());
         assertEquals(expected.getTotalCost(), actual.getTotalCost());
@@ -121,16 +121,16 @@ public class OrderControllerTest {
         return orderRequest;
     }
 
-    private OrderView<OrderItemView> createOrderView() {
+    private OrderResponse<OrderItemResponse> createOrderView() {
         final Long id = 1L;
         final Double totalCos = 50.2;
         final String email = "test@test.com";
-        final List<OrderItemView> orderItemViews = new ArrayList<>();
+        final List<OrderItemResponse> orderItemResponses = new ArrayList<>();
         final Long productId = 2L;
         final Double price = 25.1;
         final Double quantity = 2.0;
-        orderItemViews.add(new OrderItemView(productId, price, quantity));
-        final OrderView<OrderItemView> orderView = new OrderView(id, totalCos, email, new Date(), orderItemViews);
-        return orderView;
+        orderItemResponses.add(new OrderItemResponse(productId, price, quantity));
+        final OrderResponse<OrderItemResponse> orderResponse = new OrderResponse(id, totalCos, email, new Date(), orderItemResponses);
+        return orderResponse;
     }
 }

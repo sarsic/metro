@@ -1,13 +1,13 @@
-package com.metro.app.service.model.view.order;
+package com.metro.app.service.response.order;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.metro.app.service.model.request.order.OrderRequest;
+import com.metro.app.service.request.order.OrderRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 import java.util.List;
 
-public class OrderView<T> extends OrderRequest<T> {
+public class OrderResponse<T> extends OrderRequest<T> {
     @Schema(name = "id",
             type = "number",
             format = "integer",
@@ -22,12 +22,12 @@ public class OrderView<T> extends OrderRequest<T> {
     private Double totalCost;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") private Date dtc;
 
-    protected OrderView() {
+    protected OrderResponse() {
 
     }
 
-    public OrderView(final Long id, final Double totalCost, final String email, final Date dtc,
-                     final List<T> orderItemsResource) {
+    public OrderResponse(final Long id, final Double totalCost, final String email, final Date dtc,
+                         final List<T> orderItemsResource) {
         super(email, orderItemsResource);
         this.id = id;
         this.totalCost = totalCost;
